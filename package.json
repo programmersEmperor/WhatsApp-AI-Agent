@@ -13,6 +13,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@green-api/whatsapp-api-client": "^0.4.4",
     "express": "^5.1.0"
   },
   "devDependencies": {
