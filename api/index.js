@@ -2,7 +2,7 @@ require('dotenv').config();
 const express =  require('express');
 const whatsAppClient = require("@green-api/whatsapp-api-client");
 const bodyParser = require("body-parser");
-const ChatGoogleGenerativeAI = '@langchain/google-genai'
+const { ChatGoogleGenerativeAI } = require('@langchain/google-genai')
 
 const model = new ChatGoogleGenerativeAI({
     model: "gemini-1.5-flash",
