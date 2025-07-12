@@ -1,20 +1,18 @@
-import express, { Application, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import whatsAppClient from "@green-api/whatsapp-api-client";
-import bodyParser from "body-parser";
+require('dotenv').config();
+const express =  require('express');
+const whatsAppClient = require("@green-api/whatsapp-api-client");
+const bodyParser = require("body-parser");
 
-dotenv.config();
-const PORT: string = process.env.PORT!;
-const GREEN_API_INSTANCE_ID: string = process.env.GREEN_API_INSTANCE_ID!;
-const GREEN_API_INSTANCE_TOKEN: string = process.env.GREEN_API_INSTANCE_TOKEN!;
-const ADMIN_NUMBER: string = process.env.ADMIN_NUMBER!;
+const PORT = process.env.PORT;
+const GREEN_API_INSTANCE_ID = process.env.GREEN_API_INSTANCE_ID;
+const GREEN_API_INSTANCE_TOKEN = process.env.GREEN_API_INSTANCE_TOKEN;
+const ADMIN_NUMBER = process.env.ADMIN_NUMBER;
 
-
-const app: Application = express();
+const app = express();
 app.use(bodyParser.json());
 
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req, res) => {
     res.send('Hello from Express with TypeScript!');
 });
 
@@ -53,5 +51,4 @@ app.listen(PORT, async () => {
   }
 });
 
-
-export default app
+module.exports = app;
