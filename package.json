@@ -14,7 +14,9 @@
   "type": "commonjs",
   "dependencies": {
     "@green-api/whatsapp-api-client": "^0.4.4",
-    "express": "^5.1.0"
+    "@t3-oss/env-core": "^0.13.8",
+    "express": "^5.1.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
