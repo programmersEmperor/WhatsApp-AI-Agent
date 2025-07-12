@@ -33,11 +33,11 @@ const restAPI = whatsAppClient.restAPI({
 const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
 webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, typeMessage, textMessage) => {
         
-        const senderName = data.senderData.senderName;
-        const senderIntance = data.senderData.sender;
-        const typeMessage = data.messageData.typeMessage;
-        if (textMessage === 'textMessage') {
-            const messageText = data.messageData.textMessageData.textMessage;
+        const mySenderName = data.senderData.senderName;
+        const mySender = data.senderData.sender;
+        const myTypeMessage = data.messageData.typeMessage;
+        if (myTypeMessage === 'textMessage') {
+            const myTextMessage = data.messageData.textMessageData.textMessage;
             
             const aiResponse = await model.invoke(`
 ### Context
@@ -70,13 +70,13 @@ Your reply is: Mutasim is not available right now, I am just his assistant. But 
 
 Now your turn:
 ###
-Sender Name is: ${senderName}
-Message Content is: ${messageText}
+Sender Name is: ${mySenderName}
+Message Content is: ${myTextMessage}
 Your reply is:`)
 
 
             const response = await restAPI.message.sendMessage(
-                `${senderIntance}`,
+                `${mySender}`,
                 null,
                 aiResponse.content.toString()
             );
