@@ -24,13 +24,19 @@ const restAPI = whatsAppClient.restAPI({
 // @ts-ignore
 const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
 webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, typeMessage, textMessage) => {
+        // const response = await restAPI.message.sendMessage(
+        //     `${sender}`,
+        //     null,
+        //     ${}
+        // );
+
         console.log('START=============================================')
-        console.log(`data ${data.toString()}`);
-        console.log(`idInstance ${idInstance.toString()}`);
-        console.log(`idMessage ${idMessage.toString()}`);
-        console.log(`sender ${sender.toString()}`);
-        console.log(`typeMessage ${typeMessage.toString()}`);
-        console.log(`textMessage ${textMessage.toString()}`);
+        console.log(`data ${JSON.stringify(data)}`);
+        // console.log(`idInstance ${idInstance.toString()}`);
+        // console.log(`idMessage ${idMessage.toString()}`);
+        console.log(`sender ${JSON.stringify(sender)}`);
+        console.log(`typeMessage ${JSON.stringify(typeMessage)}`);
+        console.log(`textMessage ${JSON.stringify(textMessage)}`);
         console.log('END=============================================')
     }
 );
