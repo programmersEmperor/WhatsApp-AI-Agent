@@ -29,21 +29,15 @@ const restAPI = whatsAppClient.restAPI({
     apiTokenInstance: GREEN_API_INSTANCE_TOKEN,
 });
 
-// @ts-ignore
-const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
-webHookAPI.onIncomingMessageText((data, idInstance, idMessage, sender, typeMessage, textMessage) => {
-        try {
-        
-        console.log(`MessageData`, JSON.stringify(data, undefined, 2));
-        
-        const mySenderName = data.senderData.senderName;
-        const mySender = data.senderData.sender;
-        const myTypeMessage = data.messageData.typeMessage;
-        if (myTypeMessage === 'textMessage') {
-            const myTextMessage = data.messageData.textMessageData.textMessage;
-            console.log('myTextMessage', myTextMessage)
+app.post('/webhooks', async (req, res) => {
+    try {
+        console.log(`Received webhook ${req.body.typeWebhook}`);        
+        if (req.body.typeWebhook === 'incomingMessageReceived' && req.body.messageData.typeMessage === 'textMessage' ) {
+            const mySenderName = req.body.senderData.senderName;
+            const mySender = req.body.senderData.sender;
+            const myTextMessage = req.body.messageData.textMessageData.textMessage;
 
-            model.invoke(`
+            const aiResponse = await model.invoke(`
 ### Context
 You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
 ###
@@ -76,65 +70,31 @@ Now your turn:
 ###
 Sender Name is: ${mySenderName}
 Message Content is: ${myTextMessage}
-Your reply is:`).then((aiResponse)=>{
-                console.log('ai response', aiResponse.content.toString())
-                restAPI.message.sendMessage(
-                    `${mySender}`,
-                    null,
-                    aiResponse.content.toString()
-                );
-            })
+Your reply is:`)
+
+        console.log('ai response', aiResponse.content.toString())
+        await restAPI.message.sendMessage(
+            `${mySender}`,
+            null,
+            aiResponse.content.toString()
+        );
+
+        } else {
+           // TODO
 
         }
-        }
-        catch(e){
-            console.error(e)
-        }
+
+
     }
-);
+    catch(e){
+        console.error(e)
+    }
+    return res.send();
+});
+
 
 app.listen(PORT, () => {
-//     const mySenderName = 'Sweetheart'
-//     const myTextMessage = 'كيف الحال؟'
-//   console.log(`Server running on http://localhost:${PORT}`);
-//   model.invoke(`
-// ### Context
-// You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
-// ###
-
-// ### Duty
-// You reply to messages on behave of Mutasim.
-// Your replies must be short and direct.
-// If you don't know say, I dont know.
-// ###
-
-// ### Examples: 
-// Sender Name is: My Dad
-// Message Content is: جمعة مباركة ي ولدي
-// Your reply is: علينا وعليك ي ابتي
-
-// ===========
-
-// Sender Name is: My Brother
-// Message Content is: ماعتفعلو اليوم
-// Your reply is: مشني داري, ايش رايك تتصل لي؟
-
-// ===========
-
-// Sender Name is: My Boss
-// Message Content is: Have you finished your task yet?
-// Your reply is: Mutasim is not available right now, I am just his assistant. But I am sure he will finish it and give it to you ASAP
-// ###
-
-// Now your turn:
-// ###
-// Sender Name is: ${mySenderName}
-// Message Content is: ${myTextMessage}
-// Your reply is:`).then((aiResponse)=>{
-//     console.log('ai response here', aiResponse.content.toString())
-
-// })
-
+    console.log(`running on ${PORT}`)
 });
 
 
