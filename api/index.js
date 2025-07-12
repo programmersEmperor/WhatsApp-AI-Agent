@@ -32,6 +32,9 @@ const restAPI = whatsAppClient.restAPI({
 // @ts-ignore
 const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
 webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, typeMessage, textMessage) => {
+        try {
+        
+            console.log(`MessageData`, JSON.stringify(data, undefined, 2));
         
         const mySenderName = data.senderData.senderName;
         const mySender = data.senderData.sender;
@@ -74,15 +77,20 @@ Sender Name is: ${mySenderName}
 Message Content is: ${myTextMessage}
 Your reply is:`)
 
+                console.log('ai response', aiResponse.content.toString())
 
-            const response = await restAPI.message.sendMessage(
+            await restAPI.message.sendMessage(
                 `${mySender}`,
                 null,
                 aiResponse.content.toString()
             );
         }
 
-        console.log(`MessageData`, JSON.stringify(data, undefined, 2));
+
+        }
+        catch(e){
+            console.error(e)
+        }
     }
 );
 
