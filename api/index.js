@@ -33,8 +33,8 @@ webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, ty
             const response = await restAPI.message.sendMessage(
                 `${sender}`,
                 null,
-                'Hello Mutasim is not available right now, how can I help you?'
-                );
+                `Hello ${senderName}, I am not available right now, Feel free to write what ever you want?`
+            );
         }
 
         console.log(`MessageData`, JSON.stringify(data, undefined, 2));
