@@ -31,7 +31,7 @@ const restAPI = whatsAppClient.restAPI({
 
 // @ts-ignore
 const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
-webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, typeMessage, textMessage) => {
+webHookAPI.onIncomingMessageText((data, idInstance, idMessage, sender, typeMessage, textMessage) => {
         try {
         
         console.log(`MessageData`, JSON.stringify(data, undefined, 2));
@@ -43,7 +43,7 @@ webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, ty
             const myTextMessage = data.messageData.textMessageData.textMessage;
             console.log('myTextMessage', myTextMessage)
 
-            const aiResponse = await model.invoke(`
+            model.invoke(`
 ### Context
 You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
 ###
@@ -76,18 +76,16 @@ Now your turn:
 ###
 Sender Name is: ${mySenderName}
 Message Content is: ${myTextMessage}
-Your reply is:`)
+Your reply is:`).then((aiResponse)=>{
+                console.log('ai response', aiResponse.content.toString())
+                restAPI.message.sendMessage(
+                    `${mySender}`,
+                    null,
+                    aiResponse.content.toString()
+                );
+            })
 
-            console.log('ai response', aiResponse.content.toString())
-
-            // await restAPI.message.sendMessage(
-            //     `${mySender}`,
-            //     null,
-            //     aiResponse.content.toString()
-            // );
         }
-
-
         }
         catch(e){
             console.error(e)
@@ -95,11 +93,11 @@ Your reply is:`)
     }
 );
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
 //     const mySenderName = 'Sweetheart'
 //     const myTextMessage = 'كيف الحال؟'
 //   console.log(`Server running on http://localhost:${PORT}`);
-//   const aiResponse = await model.invoke(`
+//   model.invoke(`
 // ### Context
 // You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
 // ###
@@ -132,9 +130,11 @@ app.listen(PORT, async () => {
 // ###
 // Sender Name is: ${mySenderName}
 // Message Content is: ${myTextMessage}
-// Your reply is:`)
+// Your reply is:`).then((aiResponse)=>{
+//     console.log('ai response here', aiResponse.content.toString())
 
-//     console.log('ai response', aiResponse.content.toString())
+// })
+
 });
 
 
