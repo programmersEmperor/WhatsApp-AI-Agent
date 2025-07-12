@@ -34,7 +34,7 @@ const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
 webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, typeMessage, textMessage) => {
         
         const senderName = data.senderData.senderName;
-        const sender = data.senderData.sender;
+        const senderIntance = data.senderData.sender;
         const typeMessage = data.messageData.typeMessage;
         if (textMessage === 'textMessage') {
             const messageText = data.messageData.textMessageData.textMessage;
@@ -76,7 +76,7 @@ Your reply is:`)
 
 
             const response = await restAPI.message.sendMessage(
-                `${sender}`,
+                `${senderIntance}`,
                 null,
                 aiResponse.content.toString()
             );
