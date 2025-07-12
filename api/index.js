@@ -34,14 +34,15 @@ const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
 webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, typeMessage, textMessage) => {
         try {
         
-            console.log(`MessageData`, JSON.stringify(data, undefined, 2));
+        console.log(`MessageData`, JSON.stringify(data, undefined, 2));
         
         const mySenderName = data.senderData.senderName;
         const mySender = data.senderData.sender;
         const myTypeMessage = data.messageData.typeMessage;
-        if (myTypeMessage === 'textMessage') {
+        if (myTypeMessage === 'textMessage')
+             {
             const myTextMessage = data.messageData.textMessageData.textMessage;
-            
+            console.log('myTextMessage', myTextMessage)
             const aiResponse = await model.invoke(`
 ### Context
 You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
