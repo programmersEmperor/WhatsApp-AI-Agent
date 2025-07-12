@@ -2,6 +2,14 @@ require('dotenv').config();
 const express =  require('express');
 const whatsAppClient = require("@green-api/whatsapp-api-client");
 const bodyParser = require("body-parser");
+const ChatGoogleGenerativeAI = '@langchain/google-genai'
+
+const model = new ChatGoogleGenerativeAI({
+    model: "gemini-1.5-flash",
+    maxOutputTokens: 2000,
+    temperature: 0.0
+});
+
 
 const PORT = process.env.PORT;
 const GREEN_API_INSTANCE_ID = process.env.GREEN_API_INSTANCE_ID;
@@ -30,10 +38,47 @@ webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, ty
         const typeMessage = data.messageData.typeMessage;
         if (textMessage === 'textMessage') {
             const messageText = data.messageData.textMessageData.textMessage;
+            
+            const aiResponse = await model.invoke(`
+### Context
+You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
+###
+
+### Duty
+You reply to messages on behave of Mutasim.
+Your replies must be short and direct.
+If you don't know say, I dont know.
+###
+
+### Examples: 
+Sender Name is: My Dad
+Message Content is: جمعة مباركة ي ولدي
+Your reply is: علينا وعليك ي ابتي
+
+===========
+
+Sender Name is: My Brother
+Message Content is: ماعتفعلو اليوم
+Your reply is: مشني داري, ايش رايك تتصل لي؟
+
+===========
+
+Sender Name is: My Boss
+Message Content is: Have you finished your task yet?
+Your reply is: Mutasim is not available right now, I am just his assistant. But I am sure he will finish it and give it to you ASAP
+###
+
+Now your turn:
+###
+Sender Name is: ${senderName}
+Message Content is: ${messageText}
+Your reply is:`)
+
+
             const response = await restAPI.message.sendMessage(
                 `${sender}`,
                 null,
-                `Hello ${senderName}, I am not available right now, Feel free to write what ever you want?`
+                aiResponse.content.toString()
             );
         }
 
@@ -41,20 +86,8 @@ webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, ty
     }
 );
 
-app.listen(PORT, async () => {
-  try {
-    console.log(`Server running on http://localhost:${PORT}`);
-    
-        // Send test message that triggers webhook
-        const response = await restAPI.message.sendMessage(
-            `${ADMIN_NUMBER}@c.us`,
-            null,
-            "Mutasim Bot is running"
-        );
-  }
-  catch(e){
-    console.error('error: ', e);
-  }
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 module.exports = app;

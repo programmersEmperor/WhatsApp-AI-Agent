@@ -12,9 +12,12 @@
   "type": "commonjs",
   "dependencies": {
     "@green-api/whatsapp-api-client": "^0.4.4",
+    "@langchain/core": "^0.3.62",
+    "@langchain/google-genai": "^0.2.14",
     "@t3-oss/env-core": "^0.13.8",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "langchain": "^0.3.29",
     "zod": "^4.0.5"
   },
   "devDependencies": {
