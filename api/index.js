@@ -43,15 +43,48 @@ webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, ty
             const myTextMessage = data.messageData.textMessageData.textMessage;
             console.log('myTextMessage', myTextMessage)
 
-            const aiResponse = await model.invoke('hi')
+            const aiResponse = await model.invoke(`
+### Context
+You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
+###
+
+### Duty
+You reply to messages on behave of Mutasim.
+Your replies must be short and direct.
+If you don't know say, I dont know.
+###
+
+### Examples: 
+Sender Name is: My Dad
+Message Content is: جمعة مباركة ي ولدي
+Your reply is: علينا وعليك ي ابتي
+
+===========
+
+Sender Name is: My Brother
+Message Content is: ماعتفعلو اليوم
+Your reply is: مشني داري, ايش رايك تتصل لي؟
+
+===========
+
+Sender Name is: My Boss
+Message Content is: Have you finished your task yet?
+Your reply is: Mutasim is not available right now, I am just his assistant. But I am sure he will finish it and give it to you ASAP
+###
+
+Now your turn:
+###
+Sender Name is: ${mySenderName}
+Message Content is: ${myTextMessage}
+Your reply is:`)
 
             console.log('ai response', aiResponse.content.toString())
 
-            await restAPI.message.sendMessage(
-                `${mySender}`,
-                null,
-                aiResponse.content.toString()
-            );
+            // await restAPI.message.sendMessage(
+            //     `${mySender}`,
+            //     null,
+            //     aiResponse.content.toString()
+            // );
         }
 
 
@@ -62,8 +95,47 @@ webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, ty
     }
 );
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(PORT, async () => {
+//     const mySenderName = 'Sweetheart'
+//     const myTextMessage = 'كيف الحال؟'
+//   console.log(`Server running on http://localhost:${PORT}`);
+//   const aiResponse = await model.invoke(`
+// ### Context
+// You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
+// ###
+
+// ### Duty
+// You reply to messages on behave of Mutasim.
+// Your replies must be short and direct.
+// If you don't know say, I dont know.
+// ###
+
+// ### Examples: 
+// Sender Name is: My Dad
+// Message Content is: جمعة مباركة ي ولدي
+// Your reply is: علينا وعليك ي ابتي
+
+// ===========
+
+// Sender Name is: My Brother
+// Message Content is: ماعتفعلو اليوم
+// Your reply is: مشني داري, ايش رايك تتصل لي؟
+
+// ===========
+
+// Sender Name is: My Boss
+// Message Content is: Have you finished your task yet?
+// Your reply is: Mutasim is not available right now, I am just his assistant. But I am sure he will finish it and give it to you ASAP
+// ###
+
+// Now your turn:
+// ###
+// Sender Name is: ${mySenderName}
+// Message Content is: ${myTextMessage}
+// Your reply is:`)
+
+//     console.log('ai response', aiResponse.content.toString())
 });
+
 
 module.exports = app;
