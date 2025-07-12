@@ -7,6 +7,8 @@ dotenv.config();
 const PORT: string = process.env.PORT!;
 const GREEN_API_INSTANCE_ID: string = process.env.GREEN_API_INSTANCE_ID!;
 const GREEN_API_INSTANCE_TOKEN: string = process.env.GREEN_API_INSTANCE_TOKEN!;
+const ADMIN_NUMBER: string = process.env.ADMIN_NUMBER!;
+
 
 const app: Application = express();
 app.use(bodyParser.json());
@@ -41,7 +43,7 @@ app.listen(PORT, async () => {
     
         // Send test message that triggers webhook
         const response = await restAPI.message.sendMessage(
-            `967${'780884775'}@c.us`,
+            `${ADMIN_NUMBER}@c.us`,
             null,
             "Mutasim Bot is running"
         );
