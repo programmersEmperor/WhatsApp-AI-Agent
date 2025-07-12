@@ -24,20 +24,20 @@ const restAPI = whatsAppClient.restAPI({
 // @ts-ignore
 const webHookAPI = whatsAppClient.webhookAPI(app, "/webhooks");
 webHookAPI.onIncomingMessageText( async (data, idInstance, idMessage, sender, typeMessage, textMessage) => {
-        // const response = await restAPI.message.sendMessage(
-        //     `${sender}`,
-        //     null,
-        //     ${}
-        // );
+        
+        const senderName = data.senderData.senderName;
+        const sender = data.senderData.sender;
+        const typeMessage = data.messageData.typeMessage;
+        if (textMessage === 'textMessage') {
+            const messageText = data.messageData.textMessageData.textMessage;
+            const response = await restAPI.message.sendMessage(
+                `${sender}`,
+                null,
+                'Hello Mutasim is not available right now, how can I help you?'
+                );
+        }
 
-        console.log('START=============================================')
-        console.log(`data ${JSON.stringify(data)}`);
-        // console.log(`idInstance ${idInstance.toString()}`);
-        // console.log(`idMessage ${idMessage.toString()}`);
-        console.log(`sender ${JSON.stringify(sender)}`);
-        console.log(`typeMessage ${JSON.stringify(typeMessage)}`);
-        console.log(`textMessage ${JSON.stringify(textMessage)}`);
-        console.log('END=============================================')
+        console.log(`MessageData`, JSON.stringify(data, undefined, 2));
     }
 );
 
