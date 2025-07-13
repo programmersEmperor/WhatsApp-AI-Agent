@@ -48,16 +48,19 @@ app.post('/webhooks', async (req, res) => {
                 }
             })
 
+            console.log('chatHistory', chatHistory.toString())
+
 
 
             const prompt = `
 ### Context
-You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
+انت خدمة العملاء الذكية الخاصة بمتجر درة العود لاجود انواع العود
 ###
 
 ### Duty
-You reply to messages on behave of Mutasim.
 Your replies must be short and direct.
+Be polite and gentle.
+Try help them to buy our products
 If you don't know say, I dont know.
 ###
 
