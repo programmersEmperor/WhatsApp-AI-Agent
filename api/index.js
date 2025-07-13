@@ -37,7 +37,20 @@ app.post('/webhooks', async (req, res) => {
             const mySender = req.body.senderData.sender;
             const myTextMessage = req.body.messageData.textMessageData.textMessage;
 
-            const aiResponse = await model.invoke(`
+            const chatHistory = await restAPI.message.getChatHistory(mySender, 10)
+            const preparedChatHistory = chatHistory.map((message)=>{
+                const createdAt = new Date(1752387702 * 1000).toLocaleString('en-US', { timeZone: 'Asia/Aden' });
+                if(message.type === 'incoming'){
+                    return `The client at ${createdAt}, asked: ${textMessage}`
+                }
+                else {
+                    return `The agent at ${createdAt}, replied: ${textMessage}`
+                }
+            })
+
+
+
+            const prompt = `
 ### Context
 You are Eng. Mutasim Al-Mualimi WhatsApp Assistant
 ###
@@ -49,32 +62,36 @@ If you don't know say, I dont know.
 ###
 
 ### Examples: 
-Sender Name is: My Dad
-Message Content is: جمعة مباركة ي ولدي
-Your reply is: علينا وعليك ي ابتي
 
-===========
+The Client Name: وليد
+The client at 7/12/2025, 6:21:42 PM, asked: السلام عليكم
+The agent at 7/12/2025, 6:21:50 PM, replied: وعليكم السلام. انا خدمة العملاء الذكي الخاص بمتجر درة العود. كيف اقدر اساعدك؟ 
+The client at 7/12/2025, 6:22:04 PM, asked: ايش تقدمو
+The agent at 7/12/2025, 6:22:10 PM, replied: عودة سمطرى طبيعي, عودة تايقر كمبودي
+The client at 7/12/2025, 6:22:14 PM, asked: بكم السمطرى
+The agent at 7/12/2025, 6:22:20 PM, replied: عودة سمطرى الطبيعي نوفرها الواقية عادتنا بـ65,000 لكن احنا مسووين تخفيضات لـ60,000 بس. اشتري الان
+The client at 7/12/2025, 6:22:30 PM, asked: اريد واحدة 
+The agent at 7/12/2025, 6:22:36 PM, replied: الى اين نوصلها لك؟
+The client at 7/12/2025, 6:24:04 PM, asked: خط المطار الجديد جولة مصعب 
+The agent at 7/12/2025, 6:25:12 PM, replied:  الطلب هو واقية تايقر كمبودي بـ60,000 الى العميل وليد. يتم توصليها الى  خط المطار الجديد جولة مصعب. هل هذا بيانات طلبك صحيحة؟
+The client at 7/12/2025, 6:26:04 PM, asked: ايوة 
+The agent now replied: جاري توصيلها اليكم. شكرا لتواصلكم معنا
 
-Sender Name is: My Brother
-Message Content is: ماعتفعلو اليوم
-Your reply is: مشني داري, ايش رايك تتصل لي؟
-
-===========
-
-Sender Name is: My Boss
-Message Content is: Have you finished your task yet?
-Your reply is: Mutasim is not available right now, I am just his assistant. But I am sure he will finish it and give it to you ASAP
 ###
+
 
 Now your turn:
 ###
-Sender Name is: ${mySenderName}
-Message Content is: ${myTextMessage}
-Your reply is:`)
+The Client Name: ${mySenderName}
+${preparedChatHistory.join('\n')}
+The agent now replied:`;
+
+            console.log('prompt', prompt);
+            const aiResponse = await model.invoke(prompt)
 
         console.log('ai response', aiResponse.content.toString())
         await restAPI.message.sendMessage(
-            `${mySender}`,
+            mySender,
             null,
             aiResponse.content.toString()
         );
