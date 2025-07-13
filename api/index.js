@@ -39,12 +39,12 @@ app.post('/webhooks', async (req, res) => {
 
             const chatHistory = await restAPI.message.getChatHistory(mySender, 10)
             const preparedChatHistory = chatHistory.map((message)=>{
-                const createdAt = new Date(1752387702 * 1000).toLocaleString('en-US', { timeZone: 'Asia/Aden' });
+                const createdAt = new Date(message.timestamp * 1000).toLocaleString('en-US', { timeZone: 'Asia/Aden' });
                 if(message.type === 'incoming'){
-                    return `The client at ${createdAt}, asked: ${textMessage}`
+                    return `The client at ${createdAt}, asked: ${message.textMessage}`
                 }
                 else {
-                    return `The agent at ${createdAt}, replied: ${textMessage}`
+                    return `The agent at ${createdAt}, replied: ${message.textMessage}`
                 }
             })
 
